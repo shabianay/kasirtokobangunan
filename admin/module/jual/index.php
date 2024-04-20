@@ -82,10 +82,6 @@
  												<td><input type="text" class="form-control" name="pembeli"></td>
  											</tr>
  											<tr>
- 												<td><b>Tanggal</b></td>
- 												<td><input type="text" readonly="readonly" class="form-control" value="<?php echo date("j F Y, G:i"); ?>" name="tgl"></td>
- 											</tr>
- 											<tr>
  												<td><b>Alamat Pembeli</b></td>
  												<td><input type="text" class="form-control" name="alamatpembeli"></td>
  											</tr>

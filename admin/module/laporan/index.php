@@ -150,52 +150,83 @@
  						<tbody>
  							<?php
 								$no = 1;
+								$kelompok_tanggal = array(); // Array untuk menyimpan data penjualan berdasarkan tanggal input
+								$total_penjualan = 0; // Inisialisasi total penjualan
+								$total_modal = 0; // Inisialisasi total modal
+								$total_keuntungan = 0; // Inisialisasi total keuntungan
+								$total_barang = 0; // Inisialisasi total jumlah barang
+
 								if (!empty($_GET['cari'])) {
+									// Query data penjualan berdasarkan periode
 									$periode = $_POST['bln'] . '-' . $_POST['thn'];
-									$no = 1;
-									$jumlah = 0;
-									$bayar = 0;
 									$hasil = $lihat->periode_jual($periode);
 								} elseif (!empty($_GET['hari'])) {
+									// Query data penjualan berdasarkan tanggal
 									$hari = $_POST['hari'];
-									$no = 1;
-									$jumlah = 0;
-									$bayar = 0;
 									$hasil = $lihat->hari_jual($hari);
 								} else {
+									// Query data penjualan tanpa filter
 									$hasil = $lihat->jual();
 								}
-								?>
- 							<?php
-								$bayar = 0;
-								$jumlah = 0;
-								$modal = 0;
+
+								// Kelompokkan data penjualan berdasarkan tanggal input
 								foreach ($hasil as $isi) {
-									$bayar += $isi['total'];
-									$modal += $isi['harga_beli'] * $isi['jumlah'];
-									$jumlah += $isi['jumlah'];
+									$tanggal_input = $isi['tanggal_input'];
+									$kelompok_tanggal[$tanggal_input][] = $isi;
+								}
+
+								// Tampilkan data penjualan sesuai kelompok tanggal
+								foreach ($kelompok_tanggal as $tanggal => $data_tanggal) {
+									$bayar = 0;
+									$jumlah = 0;
+									$modal = 0;
+									foreach ($data_tanggal as $isi) {
+										$bayar += $isi['total'];
+										$modal += $isi['harga_beli'] * $isi['jumlah'];
+										$jumlah += $isi['jumlah'];
+										// Hitung total penjualan, total modal, dan total keuntungan
+										$total_penjualan += $isi['total'];
+										$total_modal += $isi['harga_beli'] * $isi['jumlah'];
+										$total_keuntungan += $isi['total'] - ($isi['harga_beli'] * $isi['jumlah']);
+										$total_barang += $isi['jumlah']; // Tambahkan jumlah barang ke total_barang
+
 								?>
+ 									<tr>
+ 										<td><?php echo $no; ?></td>
+ 										<td><?php echo $isi['nama_barang']; ?></td>
+ 										<td><?php echo $isi['jumlah']; ?> </td>
+ 										<td>Rp.<?php echo number_format($isi['harga_beli'] * $isi['jumlah']); ?>,-</td>
+ 										<td>Rp.<?php echo number_format($isi['total']); ?>,-</td>
+ 										<td><?php echo $isi['nm_member']; ?></td>
+ 										<td><?php echo $isi['tanggal_input']; ?></td>
+ 									</tr>
+ 								<?php
+										$no++;
+									}
+									// Tampilkan total penjualan untuk setiap kelompok tanggal
+									?>
  								<tr>
- 									<td><?php echo $no; ?></td>
- 									<td><?php echo $isi['nama_barang']; ?></td>
- 									<td><?php echo $isi['jumlah']; ?> </td>
- 									<td>Rp.<?php echo number_format($isi['harga_beli'] * $isi['jumlah']); ?>,-</td>
- 									<td>Rp.<?php echo number_format($isi['total']); ?>,-</td>
- 									<td><?php echo $isi['nm_member']; ?></td>
- 									<td><?php echo $isi['tanggal_input']; ?></td>
+ 									<th colspan="2">Total Terjual</th>
+ 									<th><?php echo $jumlah; ?></th>
+ 									<th>Rp.<?php echo number_format($modal); ?>,-</th>
+ 									<th>Rp.<?php echo number_format($bayar); ?>,-</th>
+ 									<th style="background:#0bb365;color:#fff;">Keuntungan</th>
+ 									<th style="background:#0bb365;color:#fff;">
+ 										Rp.<?php echo number_format($bayar - $modal); ?>,-</th>
  								</tr>
- 							<?php $no++;
-								} ?>
+ 							<?php
+								}
+								?>
  						</tbody>
  						<tfoot>
  							<tr>
- 								<th colspan="2">Total Terjual</td>
- 								<th><?php echo $jumlah; ?></td>
- 								<th>Rp.<?php echo number_format($modal); ?>,-</th>
- 								<th>Rp.<?php echo number_format($bayar); ?>,-</th>
- 								<th style="background:#0bb365;color:#fff;">Keuntungan</th>
+ 								<th colspan="2">Total Terjual</th>
+ 								<th><?php echo $total_barang; ?></th> <!-- Tampilkan total jumlah barang -->
+ 								<th>Rp.<?php echo number_format($total_modal); ?>,-</th>
+ 								<th>Rp.<?php echo number_format($total_penjualan); ?>,-</th>
+ 								<th style="background:#0bb365;color:#fff;">Total Keuntungan</th>
  								<th style="background:#0bb365;color:#fff;">
- 									Rp.<?php echo number_format($bayar - $modal); ?>,-</th>
+ 									Rp.<?php echo number_format($total_keuntungan); ?>,-</th>
  							</tr>
  						</tfoot>
  					</table>

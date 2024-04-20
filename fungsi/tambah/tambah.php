@@ -92,14 +92,12 @@ if (!empty($_SESSION['admin'])) {
         $nama_pembeli = htmlentities($_POST['pembeli']);
         $alamat = htmlentities($_POST['alamatpembeli']);
         $telepon = htmlentities($_POST['telepon']);
-        $tgl = date("j F Y, G:i");
 
         $data[] = $nama_pembeli;
         $data[] = $alamat;
         $data[] = $telepon;
-        $data[] = $tgl;
 
-        $sql = 'INSERT INTO pembeli (nama_pembeli, alamat, telepon, tgl) VALUES (?,?,?,?)';
+        $sql = 'INSERT INTO pembeli (nama_pembeli, alamat, telepon) VALUES (?,?,?)';
         $row = $config->prepare($sql);
         $row->execute($data);
 
