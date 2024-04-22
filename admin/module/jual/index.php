@@ -92,7 +92,7 @@
  							<td> Nama Barang</td>
  							<td style="width:10%;"> Jumlah</td>
  							<td style="width:10%;"> Satuan</td>
- 							<td style="width:15%;"> Harga</td>
+ 							<td style="width:15%;"> Harga Jual</td>
  							<td style="width:20%;"> Total</td>
  							<td> Kasir</td>
  							<td> Aksi</td>
@@ -237,7 +237,7 @@
  							<td></td>
  							<td>
  								<a href="print.php?nm_member=<?php echo $_SESSION['admin']['nm_member']; ?>
-									&bayar=<?php echo $bayar; ?>&kembali=<?php echo $hitung; ?>" target="_blank">
+									&bayar=<?php echo $bayar; ?>&kembali=<?php echo $hitung; ?>&nama_pembeli=<?php echo $nama_pembeli ?>&alamat_pembeli=<?php echo $alamat_pembeli ?>&telepon_pembeli=<?php echo $telepon_pembeli ?>" target="_blank">
  									<button class="btn btn-secondary">
  										<i class="fa fa-print"></i> Cetak Struk
  									</button></a>

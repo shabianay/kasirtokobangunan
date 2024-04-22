@@ -192,8 +192,8 @@ if (!empty($_SESSION['admin'])) {
 
         if ($hasil['stok'] >= $jumlah) {
             $total = $harga_jual * $jumlah;
-            $data1 = array($jumlah, $total, $id);
-            $sql1 = 'UPDATE penjualan SET jumlah=?, total=? WHERE id_penjualan=?';
+            $data1 = array($jumlah, $total, $harga_jual, $id);
+            $sql1 = 'UPDATE penjualan SET jumlah=?, total=?, harga_jual=? WHERE id_penjualan=?';
             $row1 = $config->prepare($sql1);
             $row1->execute($data1);
             echo '<script>window.location="../../index.php?page=jual#keranjang"</script>';

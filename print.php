@@ -11,14 +11,12 @@ include $view;
 $lihat = new view($config);
 $toko = $lihat->toko();
 $hsl = $lihat->penjualan();
-// $lastNota = end($hsl);
 ?>
 <html>
 
 <head>
 	<title>print</title>
 	<link rel="stylesheet" href="assets/css/bootstrap.css">
-
 	<style>
 		table {
 			border-collapse: collapse;
@@ -59,12 +57,9 @@ $hsl = $lihat->penjualan();
 				</center>
 				<hr />
 				<br />
-				<p>Nama : <?php echo htmlentities($_GET['nm_member']); ?></p>
-				<p>Alamat : <?php echo htmlentities($_GET['nm_member']); ?></p>
-				<p>Telepon : <?php echo htmlentities($_GET['nm_member']); ?></p>
-				<p><b>Nama Pembeli:</b> <?php echo $nama_pembeli; ?></p>
-				<p><b>Alamat:</b> <?php echo $alamat_pembeli; ?></p>
-				<p><b>No. Telp:</b> <?php echo $telepon_pembeli; ?></p>
+				<p><b>Nama Pembeli:</b> <?php echo htmlentities($_GET['nama_pembeli']); ?></p>
+				<p><b>Alamat:</b> <?php echo htmlentities($_GET['alamat_pembeli']); ?></p>
+				<p><b>No. Telp:</b> <?php echo htmlentities($_GET['telepon_pembeli']); ?></p>
 				<table width='100%' border="1">
 					<tr>
 						<td style="width:1%;"><b>No.</b></td>
