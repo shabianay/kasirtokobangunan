@@ -11,6 +11,7 @@ include $view;
 $lihat = new view($config);
 $toko = $lihat->toko();
 $hsl = $lihat->penjualan();
+// $lastNota = end($hsl);
 ?>
 <html>
 
@@ -49,7 +50,6 @@ $hsl = $lihat->penjualan();
 	</script>
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-4"></div>
 			<div class="col-sm-4">
 				<center>
 					<p><b>UD. SUMBER BANGUNAN</b></p>
@@ -58,9 +58,13 @@ $hsl = $lihat->penjualan();
 					<p>Kasir : <?php echo htmlentities($_GET['nm_member']); ?></p>
 				</center>
 				<hr />
-				<p> Nama Pembeli : <?php echo htmlentities($_GET['nama_pembeli']); ?></p>
-				<p> Alamat : <?php echo htmlentities($_GET['alamat']); ?></p>
-				<p> No. Telepon : <?php echo htmlentities($_GET['telepon']); ?></p>
+				<br />
+				<p>Nama : <?php echo htmlentities($_GET['nm_member']); ?></p>
+				<p>Alamat : <?php echo htmlentities($_GET['nm_member']); ?></p>
+				<p>Telepon : <?php echo htmlentities($_GET['nm_member']); ?></p>
+				<p><b>Nama Pembeli:</b> <?php echo $nama_pembeli; ?></p>
+				<p><b>Alamat:</b> <?php echo $alamat_pembeli; ?></p>
+				<p><b>No. Telp:</b> <?php echo $telepon_pembeli; ?></p>
 				<table width='100%' border="1">
 					<tr>
 						<td style="width:1%;"><b>No.</b></td>

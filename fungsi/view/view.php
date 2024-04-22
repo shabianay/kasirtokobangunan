@@ -272,7 +272,7 @@ class view
 
     public function pembeli_cari($pembeli)
     {
-        $sql = "SELECT * FROM pembeli WHERE nama_pembeli LIKE '%$pembeli%'";
+        $sql = "SELECT * FROM nota WHERE nama_pembeli LIKE '%$pembeli%'";
         $row = $this->db->prepare($sql);
         $row->execute();
         $hasil = $row->fetchAll();

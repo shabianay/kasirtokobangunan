@@ -88,19 +88,21 @@ if (!empty($_SESSION['admin'])) {
         }
     }
 
-    if (!empty($_GET['pembeli'])) {
-        $nama_pembeli = htmlentities($_POST['pembeli']);
-        $alamat = htmlentities($_POST['alamatpembeli']);
-        $telepon = htmlentities($_POST['telepon']);
+    if (!empty($_GET['pembeli']) && $_GET['pembeli'] == 'tambah') {
+        if (!empty($_POST['nama_pembeli']) && !empty($_POST['alamat_pembeli']) && !empty($_POST['telepon_pembeli'])) {
+            $nama_pembeli = htmlentities($_POST['nama_pembeli']);
+            $alamat_pembeli = htmlentities($_POST['alamat_pembeli']);
+            $telepon_pembeli = htmlentities($_POST['telepon_pembeli']);
 
-        $data[] = $nama_pembeli;
-        $data[] = $alamat;
-        $data[] = $telepon;
+            $data[] = $nama_pembeli;
+            $data[] = $alamat_pembeli;
+            $data[] = $telepon_pembeli;
+            $sql = 'INSERT INTO penjualan (nama_pembeli, alamat_pembeli, telepon_pembeli) VALUES (?, ?, ?)';
+            $row = $config->prepare($sql);
+            $row->execute($data);
 
-        $sql = 'INSERT INTO pembeli (nama_pembeli, alamat, telepon) VALUES (?,?,?)';
-        $row = $config->prepare($sql);
-        $row->execute($data);
-
-        echo '<script>window.location="../../index.php?page=jual&success=tambah-data"</script>';
+            // Setelah data penjualan berhasil ditambahkan, lakukan redirect ke halaman yang sesuai
+            echo '<script>window.location="../../index.php?page=jual&success=tambah-data"</script>';
+        }
     }
 }

@@ -67,10 +67,10 @@ if (!empty($_SESSION['admin'])) {
         echo '<script>window.location="../../index.php?page=laporan&remove=hapus"</script>';
     }
 
-    if (!empty($_GET['pembeli'])) {
+    if (!empty(htmlentities($_GET['pembeli']))) {
         $id = htmlentities($_GET['id']);
         $data[] = $id;
-        $sql = 'DELETE FROM pembeli WHERE id_pembeli=?';
+        $sql = 'DELETE FROM nota WHERE id_nota=?';
         $row = $config->prepare($sql);
         $row->execute($data);
         echo '<script>window.location="../../index.php?page=jual&remove=hapus-data"</script>';

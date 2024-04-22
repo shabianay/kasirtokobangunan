@@ -144,6 +144,7 @@
  								<th style="width:10%;"> Modal</th>
  								<th style="width:10%;"> Total</th>
  								<th> Kasir</th>
+ 								<th> Nama Pembeli</th>
  								<th> Tanggal Input</th>
  							</tr>
  						</thead>
@@ -184,7 +185,6 @@
 										$bayar += $isi['total'];
 										$modal += $isi['harga_beli'] * $isi['jumlah'];
 										$jumlah += $isi['jumlah'];
-										// Hitung total penjualan, total modal, dan total keuntungan
 										$total_penjualan += $isi['total'];
 										$total_modal += $isi['harga_beli'] * $isi['jumlah'];
 										$total_keuntungan += $isi['total'] - ($isi['harga_beli'] * $isi['jumlah']);
@@ -198,6 +198,7 @@
  										<td>Rp.<?php echo number_format($isi['harga_beli'] * $isi['jumlah']); ?>,-</td>
  										<td>Rp.<?php echo number_format($isi['total']); ?>,-</td>
  										<td><?php echo $isi['nm_member']; ?></td>
+ 										<td><?php echo $isi['nama_pembeli']; ?></td>
  										<td><?php echo $isi['tanggal_input']; ?></td>
  									</tr>
  								<?php
@@ -210,7 +211,7 @@
  									<th><?php echo $jumlah; ?></th>
  									<th>Rp.<?php echo number_format($modal); ?>,-</th>
  									<th>Rp.<?php echo number_format($bayar); ?>,-</th>
- 									<th style="background:#0bb365;color:#fff;">Keuntungan</th>
+ 									<th colspan="2" style="background:#0bb365;color:#fff;">Keuntungan</th>
  									<th style="background:#0bb365;color:#fff;">
  										Rp.<?php echo number_format($bayar - $modal); ?>,-</th>
  								</tr>
@@ -224,7 +225,7 @@
  								<th><?php echo $total_barang; ?></th> <!-- Tampilkan total jumlah barang -->
  								<th>Rp.<?php echo number_format($total_modal); ?>,-</th>
  								<th>Rp.<?php echo number_format($total_penjualan); ?>,-</th>
- 								<th style="background:#0bb365;color:#fff;">Total Keuntungan</th>
+ 								<th colspan="2" style="background:#0bb365;color:#fff;">Total Keuntungan</th>
  								<th style="background:#0bb365;color:#fff;">
  									Rp.<?php echo number_format($total_keuntungan); ?>,-</th>
  							</tr>

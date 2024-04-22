@@ -180,36 +180,10 @@ if (!empty($_SESSION['admin'])) {
     }
 
     if (!empty($_GET['jual'])) {
-        $id = htmlentities($_POST['id']);
-        $id_barang = htmlentities($_POST['id_barang']);
-        $jumlah = htmlentities($_POST['jumlah']);
-
-        $sql_tampil = "select *from barang where barang.id_barang=?";
-        $row_tampil = $config->prepare($sql_tampil);
-        $row_tampil->execute(array($id_barang));
-        $hasil = $row_tampil->fetch();
-
-        if ($hasil['stok'] > $jumlah) {
-            $jual = $hasil['harga_jual'];
-            $total = $jual * $jumlah;
-            $data1[] = $jumlah;
-            $data1[] = $total;
-            $data1[] = $id;
-            $sql1 = 'UPDATE penjualan SET jumlah=?,total=? WHERE id_penjualan=?';
-            $row1 = $config->prepare($sql1);
-            $row1->execute($data1);
-            echo '<script>window.location="../../index.php?page=jual#keranjang"</script>';
-        } else {
-            echo '<script>alert("Keranjang Melebihi Stok Barang Anda !");
-					window.location="../../index.php?page=jual#keranjang"</script>';
-        }
-    }
-
-    if (!empty($_GET['jual'])) {
         $id = $_POST['id'];
         $id_barang = $_POST['id_barang'];
         $jumlah = $_POST['jumlah'];
-        $harga_jual = $_POST['harga_jual']; // Tambahkan variabel harga_jual
+        $harga_jual = $_POST['harga_jual'];
 
         $sql_tampil = "SELECT * FROM barang WHERE id_barang=?";
         $row_tampil = $config->prepare($sql_tampil);
@@ -217,7 +191,7 @@ if (!empty($_SESSION['admin'])) {
         $hasil = $row_tampil->fetch();
 
         if ($hasil['stok'] >= $jumlah) {
-            $total = $harga_jual * $jumlah; // Menghitung total berdasarkan harga jual baru
+            $total = $harga_jual * $jumlah;
             $data1 = array($jumlah, $total, $id);
             $sql1 = 'UPDATE penjualan SET jumlah=?, total=? WHERE id_penjualan=?';
             $row1 = $config->prepare($sql1);
@@ -269,7 +243,6 @@ if (!empty($_SESSION['admin'])) {
         }
     }
 
-
     if (!empty($_GET['cari_pembeli'])) {
         $cari = trim(strip_tags($_POST['keyword']));
         if ($cari == '') {
@@ -277,7 +250,7 @@ if (!empty($_SESSION['admin'])) {
             echo "Keyword pencarian tidak boleh kosong";
         } else {
             // Lakukan query untuk mencari data pembeli berdasarkan nama_pembeli
-            $sql = "SELECT * FROM pembeli WHERE nama_pembeli LIKE '%$cari%'";
+            $sql = "SELECT * FROM nota WHERE nama_pembeli LIKE '%$cari%' OR alamat_pembeli LIKE '%$cari%' OR telepon_pembeli LIKE '%$cari%' GROUP BY nama_pembeli";
             $result = $config->prepare($sql);
             $result->execute();
             $hasil = $result->fetchAll();
@@ -292,13 +265,13 @@ if (!empty($_SESSION['admin'])) {
                 <?php foreach ($hasil as $data) { ?>
                     <tr>
                         <td><?php echo $data['nama_pembeli']; ?></td>
-                        <td><?php echo $data['alamat']; ?></td>
-                        <td><?php echo $data['telepon']; ?></td>
+                        <td><?php echo $data['alamat_pembeli']; ?></td>
+                        <td><?php echo $data['telepon_pembeli']; ?></td>
                         <td>
-                            <a href="javascript:void(0);" class="btn btn-primary" onclick="tambahPembeli(<?php echo $data['id_pembeli']; ?>)">
-                                <i class="fa fa-plus"></i> Tambah
+                            <a href="javascript:void(0);" class="btn btn-primary" onclick="tambahPembeli(<?php echo $data['id_nota']; ?>)">
+                                <i class="fa fa-plus"></i> Tambah Pembeli
                             </a>
-                            <a href="fungsi/hapus/hapus.php?pembeli=hapus&id=<?php echo $data['id_pembeli']; ?>" onclick="javascript:return confirm('Yakin Hapus Data ?');"><button class="btn btn-danger">Hapus</button></a>
+                            <a href="fungsi/hapus/hapus.php?pembeli=hapus&id=<?php echo $data['id_nota']; ?>" onclick="javascript:return confirm('Yakin Hapus Data ?');"><button class="btn btn-danger">Hapus</button></a>
                         </td>
                     </tr>
                 <?php } ?>
@@ -307,21 +280,16 @@ if (!empty($_SESSION['admin'])) {
         }
     }
 
-    if (isset($_GET['get_pembeli'])) {
-        $id_pembeli = $_GET['id'];
-        $query = "SELECT * FROM pembeli WHERE id_pembeli = ?";
-        $stmt = $config->prepare($query);
-        $stmt->execute(array($id_pembeli));
-        $pembeli = $stmt->fetch();
+    if (isset($_GET['id_nota'])) {
+        $id_nota = $_GET['id_nota'];
 
-        if ($pembeli) {
-            echo '<table>';
-            echo '<tr><td width="200px">Nama Pembeli</td><td>: ' . $pembeli['nama_pembeli'] . '</td></tr>';
-            echo '<tr><td>Alamat</td><td>: ' . $pembeli['alamat'] . '</td></tr>';
-            echo '<tr><td>Telepon</td><td>: ' . $pembeli['telepon'] . '</td></tr>';
-            echo '</table>';
-        } else {
-            echo 'Data pembeli tidak ditemukan';
-        }
+        // Lakukan query untuk mendapatkan data pembeli berdasarkan id_nota
+        $sql = "SELECT * FROM nota WHERE id_nota = ?";
+        $stmt = $config->prepare($sql);
+        $stmt->execute([$id_nota]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Mengembalikan data dalam format JSON
+        echo json_encode($data);
     }
 }

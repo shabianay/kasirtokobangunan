@@ -60,78 +60,31 @@
  				</h5>
  			</div>
  			<div class="card-body">
- 				<div id="keranjang" class="table-responsive">
- 					<h4>Detail Pembelian</h4>
- 					<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#tambahPembeliModal">
- 						Tambah Pembeli
- 					</button>
- 					<div class="modal fade" id="tambahPembeliModal" tabindex="-1" role="dialog" aria-labelledby="tambahPembeliModalLabel" aria-hidden="true">
- 						<div class="modal-dialog" role="document">
- 							<div class="modal-content">
- 								<div class="modal-header">
- 									<h5 class="modal-title" id="tambahPembeliModalLabel">Tambah Pembeli</h5>
- 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
- 										<span aria-hidden="true">&times;</span>
- 									</button>
- 								</div>
- 								<form action="fungsi/tambah/tambah.php?pembeli=tambah" method="POST">
- 									<div class="modal-body">
- 										<table class="table table-bordered w-100">
- 											<tr>
- 												<td><b>Nama Pembeli</b></td>
- 												<td><input type="text" class="form-control" name="pembeli"></td>
- 											</tr>
- 											<tr>
- 												<td><b>Alamat Pembeli</b></td>
- 												<td><input type="text" class="form-control" name="alamatpembeli"></td>
- 											</tr>
- 											<tr>
- 												<td><b>No. Telepon</b></td>
- 												<td><input type="text" class="form-control" name="telepon"></td>
- 											</tr>
- 										</table>
- 										<button type="submit" class="btn btn-warning">Tambah Data</button>
- 										<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
- 									</div>
- 								</form>
+ 				<div class="row">
+ 					<div class="col-sm-4">
+ 						<div class="card card-primary mb-3">
+ 							<div class="card-header bg-primary text-white">
+ 								<h5><i class="fa fa-search"></i> Cari Data Pembeli</h5>
+ 							</div>
+ 							<div class="card-body">
+ 								<input type="text" id="pembeli" class="form-control" name="pembeli" placeholder="Masukan : Nama Pembeli  [ENTER]">
  							</div>
  						</div>
  					</div>
- 					<br />
- 					<br />
- 					<!-- Akhir inputan untuk keterangan pembeli -->
- 					<div class="row">
- 						<div class="col-sm-4">
- 							<div class="card card-primary mb-3">
- 								<div class="card-header bg-primary text-white">
- 									<h5><i class="fa fa-search"></i> Cari Data Pembeli</h5>
- 								</div>
- 								<div class="card-body">
- 									<input type="text" id="pembeli" class="form-control" name="pembeli" placeholder="Masukan : Nama Pembeli  [ENTER]">
- 								</div>
+ 					<div class="col-sm-8">
+ 						<div class="card card-primary mb-3">
+ 							<div class="card-header bg-primary text-white">
+ 								<h5><i class="fa fa-list"></i> Hasil Pencarian</h5>
  							</div>
- 						</div>
- 						<div class="col-sm-8">
- 							<div class="card card-primary mb-3">
- 								<div class="card-header bg-primary text-white">
- 									<h5><i class="fa fa-list"></i> Hasil Pencarian</h5>
- 								</div>
- 								<div class="card-body">
- 									<div class="table-responsive">
- 										<div id="hasil_cari_pembeli"></div>
- 										<div id="tunggu_pembeli"></div>
- 									</div>
+ 							<div class="card-body">
+ 								<div class="table-responsive">
+ 									<div id="hasil_cari_pembeli"></div>
+ 									<div id="tunggu_pembeli"></div>
  								</div>
  							</div>
  						</div>
  					</div>
  				</div>
- 				<br />
- 				<br />
- 				<!-- Menampilkan data pembeli yang dipilih dari hasil pencarian -->
- 				<div id="detailPembeli"></div>
- 				<br />
- 				<br />
  				<table class="table table-bordered w-100" id="example1">
  					<thead>
  						<tr>
@@ -191,7 +144,7 @@
 							// proses bayar dan ke nota
 							if (!empty($_GET['nota'] == 'yes')) {
 								$total = $_POST['total'];
-								$bayar = $_POST['bayar'];
+								$bayar = isset($_POST['bayar']) ? $_POST['bayar'] : 0;
 								if (!empty($bayar)) {
 									$hitung = $bayar - $total;
 									if ($bayar >= $total) {
@@ -203,14 +156,20 @@
 										$satuan_barang = $_POST['satuan_barang'];
 										$harga_jual = $_POST['harga_jual'];
 										$periode = $_POST['periode'];
+										$nama_pembeli = $_POST['nama_pembeli'];
+										$alamat_pembeli = $_POST['alamat_pembeli'];
+										$telepon_pembeli = $_POST['telepon_pembeli'];
+
 										$jumlah_dipilih = count($id_barang);
 
 										for ($x = 0; $x < $jumlah_dipilih; $x++) {
 											// aksi ke table nota
 											$d = array($id_barang[$x], $id_member[$x], $jumlah[$x], $total[$x], $tgl_input[$x], $satuan_barang[$x], $harga_jual[$x], $periode[$x]);
-											$sql = "INSERT INTO nota (id_barang,id_member,jumlah,total,tanggal_input,satuan_barang,harga_jual,periode) VALUES(?,?,?,?,?,?,?,?)";
+											$sql = "INSERT INTO nota (id_barang, id_member, jumlah, total, tanggal_input, satuan_barang, harga_jual, periode, nama_pembeli, alamat_pembeli, telepon_pembeli) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 											$row = $config->prepare($sql);
-											$row->execute($d);
+											$row->execute([
+												$id_barang[$x], $id_member[$x], $jumlah[$x], $total[$x], $tgl_input[$x], $satuan_barang[$x], $harga_jual[$x], $periode[$x], $nama_pembeli, $alamat_pembeli, $telepon_pembeli
+											]);
 
 											// ubah stok barang
 											$sql_barang = "SELECT * FROM barang WHERE id_barang = ?";
@@ -258,6 +217,18 @@
  											<b>RESET</b></a>
  								</td><?php } ?></td>
  							</tr>
+ 							<div class="form-group">
+ 								<label for="nama_pembeli">Nama Pembeli</label>
+ 								<input type="text" class="form-control" id="nama_pembeli" name="nama_pembeli" required>
+ 							</div>
+ 							<div class="form-group">
+ 								<label for="alamat_pembeli">Alamat Pembeli</label>
+ 								<input class="form-control" id="alamat_pembeli" name="alamat_pembeli" rows="3"></input>
+ 							</div>
+ 							<div class="form-group">
+ 								<label for="telepon_pembeli">Telepon Pembeli</label>
+ 								<input type="tel" class="form-control" id="telepon_pembeli" name="telepon_pembeli">
+ 							</div>
  						</form>
  						<!-- aksi ke table nota -->
  						<tr>
@@ -327,31 +298,39 @@
  </script>
 
  <script>
- 	$(document).ready(function() {
- 		$('a[href^="fungsi/view/view.php?pembeli=pembeli"]').click(function(e) {
- 			e.preventDefault(); // Mencegah tautan default
- 			var url = $(this).attr('href');
- 			$.get(url, function(data) {
- 				var pembeli = JSON.parse(data);
- 				// Tampilkan data pembeli di tempat yang diinginkan
- 				$('#nama_pembeli').val(pembeli.nama_pembeli);
- 				$('#alamat_pembeli').val(pembeli.alamat);
- 				$('#telepon_pembeli').val(pembeli.telepon);
- 				// atau Anda dapat menambahkan elemen HTML baru untuk menampilkan data
- 			});
- 		});
- 	});
- </script>
+ 	var dataPembeli = {}; // Variabel untuk menyimpan data pembeli
 
- <script>
- 	function tambahPembeli(id_pembeli) {
- 		// Kirim permintaan AJAX untuk mengambil data pembeli berdasarkan ID
+ 	function tambahPembeli(id_nota) {
+ 		// Lakukan AJAX request untuk mendapatkan data pembeli berdasarkan id_nota
  		$.ajax({
- 			url: 'fungsi/edit/edit.php?get_pembeli=yes&id=' + id_pembeli,
- 			type: 'GET',
+ 			type: "GET",
+ 			url: "fungsi/edit/edit.php",
+ 			data: {
+ 				id_nota: id_nota
+ 			},
  			success: function(response) {
- 				$('#detailPembeli').html(response);
+ 				// Parse data JSON yang diterima
+ 				var data = JSON.parse(response);
+
+ 				// Simpan data pembeli dalam variabel
+ 				dataPembeli = {
+ 					nama_pembeli: data.nama_pembeli,
+ 					alamat_pembeli: data.alamat_pembeli,
+ 					telepon_pembeli: data.telepon_pembeli
+ 				};
+
+ 				// Isi nilai input dengan data pembeli yang dipilih
+ 				$("#nama_pembeli").val(data.nama_pembeli);
+ 				$("#alamat_pembeli").val(data.alamat_pembeli);
+ 				$("#telepon_pembeli").val(data.telepon_pembeli);
  			}
  		});
+ 	}
+
+ 	// Fungsi untuk menampilkan data pembeli yang disimpan dalam variabel
+ 	function tampilkanDataPembeli() {
+ 		$("#nama_pembeli").val(dataPembeli.nama_pembeli);
+ 		$("#alamat_pembeli").val(dataPembeli.alamat_pembeli);
+ 		$("#telepon_pembeli").val(dataPembeli.telepon_pembeli);
  	}
  </script>
