@@ -1,3 +1,18 @@
+ <?php if (isset($_GET['success'])) { ?>
+ 	<div class="alert alert-success">
+ 		<p>Tambah Data Berhasil !</p>
+ 	</div>
+ <?php } ?>
+ <?php if (isset($_GET['success-edit'])) { ?>
+ 	<div class="alert alert-success">
+ 		<p>Update Data Berhasil !</p>
+ 	</div>
+ <?php } ?>
+ <?php if (isset($_GET['remove'])) { ?>
+ 	<div class="alert alert-danger">
+ 		<p>Hapus Data Berhasil !</p>
+ 	</div>
+ <?php } ?>
  <?php
 	$bulan_tes = array(
 		'01' => "Januari",
@@ -82,7 +97,6 @@
  								</button>
  								<a href="index.php?page=laporan" class="btn btn-success">
  									<i class="fa fa-refresh"></i> Refresh</a>
-
  								<?php if (!empty($_GET['cari'])) { ?>
  									<a href="excel.php?cari=yes&bln=<?= $_POST['bln']; ?>&thn=<?= $_POST['thn']; ?>" class="btn btn-info"><i class="fa fa-download"></i>
  										Excel</a>
@@ -135,17 +149,30 @@
  		<div class="card">
  			<div class="card-body">
  				<div class="table-responsive">
+ 					<div class="row">
+ 						<div class="col-sm-12">
+ 							Search :
+ 							<input type="text" id="searchInput">
+ 							<td>
+ 								<a class="btn btn-danger float-right" onclick="javascript:return confirm('Apakah anda ingin hapus semua laporan ?');" href="fungsi/hapus/hapus.php?laporan_all=laporan">
+ 									<b>Hapus Semua Laporan</b></a>
+ 							</td>
+ 						</div>
+ 					</div>
+ 					<br />
  					<table class="table table-bordered w-100 table-sm" id="example1">
  						<thead>
  							<tr style="background:#DFF0D8;color:#333;">
  								<th> No</th>
  								<th> Nama Barang</th>
+ 								<th> Satuan</th>
  								<th style="width:10%;"> Jumlah</th>
- 								<th style="width:10%;"> Modal</th>
+ 								<th style="width:10%;"> Harga Beli</th>
  								<th style="width:10%;"> Total</th>
  								<th> Kasir</th>
  								<th> Nama Pembeli</th>
  								<th> Tanggal Input</th>
+ 								<th> Aksi</th>
  							</tr>
  						</thead>
  						<tbody>
@@ -194,12 +221,16 @@
  									<tr>
  										<td><?php echo $no; ?></td>
  										<td><?php echo $isi['nama_barang']; ?></td>
+ 										<td><?php echo $isi['satuan_barang']; ?></td>
  										<td><?php echo $isi['jumlah']; ?> </td>
- 										<td>Rp.<?php echo number_format($isi['harga_beli'] * $isi['jumlah']); ?>,-</td>
+ 										<td>Rp.<?php echo number_format($isi['harga_beli']); ?>,-</td>
  										<td>Rp.<?php echo number_format($isi['total']); ?>,-</td>
  										<td><?php echo $isi['nm_member']; ?></td>
  										<td><?php echo $isi['nama_pembeli']; ?></td>
  										<td><?php echo $isi['tanggal_input']; ?></td>
+ 										<td>
+ 											<a href="index.php?page=laporan/edit&laporan=<?php echo $isi['id_nota']; ?>"><button class="btn btn-warning btn-xs">Edit</button></a>
+ 											<a href="fungsi/hapus/hapus.php?laporan=hapus&id=<?php echo $isi['id_nota']; ?>" onclick="javascript:return confirm('Hapus Data ?');"><button class="btn btn-danger">Hapus</button></a>
  									</tr>
  								<?php
 										$no++;
@@ -207,11 +238,11 @@
 									// Tampilkan total penjualan untuk setiap kelompok tanggal
 									?>
  								<tr>
- 									<th colspan="2">Total Terjual</th>
+ 									<th colspan="3">Total Terjual</th>
  									<th><?php echo $jumlah; ?></th>
  									<th>Rp.<?php echo number_format($modal); ?>,-</th>
  									<th>Rp.<?php echo number_format($bayar); ?>,-</th>
- 									<th colspan="2" style="background:#0bb365;color:#fff;">Keuntungan</th>
+ 									<th colspan="3" style="background:#0bb365;color:#fff;">Keuntungan</th>
  									<th style="background:#0bb365;color:#fff;">
  										Rp.<?php echo number_format($bayar - $modal); ?>,-</th>
  								</tr>
@@ -221,11 +252,11 @@
  						</tbody>
  						<tfoot>
  							<tr>
- 								<th colspan="2">Total Terjual</th>
+ 								<th colspan="3">Total Terjual</th>
  								<th><?php echo $total_barang; ?></th> <!-- Tampilkan total jumlah barang -->
  								<th>Rp.<?php echo number_format($total_modal); ?>,-</th>
  								<th>Rp.<?php echo number_format($total_penjualan); ?>,-</th>
- 								<th colspan="2" style="background:#0bb365;color:#fff;">Total Keuntungan</th>
+ 								<th colspan="3" style="background:#0bb365;color:#fff;">Total Keuntungan</th>
  								<th style="background:#0bb365;color:#fff;">
  									Rp.<?php echo number_format($total_keuntungan); ?>,-</th>
  							</tr>
@@ -236,3 +267,32 @@
  		</div>
  	</div>
  </div>
+
+ <script>
+ 	document.addEventListener("DOMContentLoaded", function() {
+ 		const input = document.getElementById("searchInput");
+ 		input.addEventListener("keyup", function() {
+ 			const filter = input.value.toUpperCase();
+ 			const table = document.getElementById("example1");
+ 			const tr = table.getElementsByTagName("tr");
+
+ 			for (let i = 0; i < tr.length; i++) {
+ 				const tdNamaBarang = tr[i].getElementsByTagName("td")[1]; // Kolom nama barang
+ 				const tdKasir = tr[i].getElementsByTagName("td")[6]; // Kolom kasir
+ 				const tdNamaPembeli = tr[i].getElementsByTagName("td")[7]; // Kolom nama pembeli
+
+ 				if (tdNamaBarang || tdKasir || tdNamaPembeli) {
+ 					const txtValueNamaBarang = tdNamaBarang.textContent || tdNamaBarang.innerText;
+ 					const txtValueKasir = tdKasir.textContent || tdKasir.innerText;
+ 					const txtValueNamaPembeli = tdNamaPembeli.textContent || tdNamaPembeli.innerText;
+
+ 					if (txtValueNamaBarang.toUpperCase().indexOf(filter) > -1 || txtValueKasir.toUpperCase().indexOf(filter) > -1 || txtValueNamaPembeli.toUpperCase().indexOf(filter) > -1) {
+ 						tr[i].style.display = "";
+ 					} else {
+ 						tr[i].style.display = "none";
+ 					}
+ 				}
+ 			}
+ 		});
+ 	});
+ </script>

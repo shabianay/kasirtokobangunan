@@ -278,4 +278,19 @@ class view
         $hasil = $row->fetchAll();
         return $hasil;
     }
+
+    public function laporan_edit($id)
+    {
+        $sql = "SELECT nota.*, barang.id_barang, barang.nama_barang, barang.harga_beli, member.id_member,
+            member.nm_member 
+            FROM nota 
+            LEFT JOIN barang ON barang.id_barang=nota.id_barang 
+            LEFT JOIN member ON member.id_member=nota.id_member 
+            WHERE nota.id_nota = ?";
+        $row = $this->db->prepare($sql);
+        $row->execute(array($id));
+        $hasil = $row->fetch();
+        return $hasil;
+    }
+
 }

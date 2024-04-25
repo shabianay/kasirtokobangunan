@@ -179,6 +179,28 @@ if (!empty($_SESSION['admin'])) {
         echo '<script>window.location="../../index.php?page=user&success=edit-data"</script>';
     }
 
+    if (!empty($_GET['laporan'])) {
+        $id = htmlentities($_POST['id']);
+        $jumlah = htmlentities($_POST['jumlah']);
+        $harga_jual = htmlentities($_POST['jual']);
+
+        // Hitung total berdasarkan jumlah dan harga jual
+        $total = $jumlah * $harga_jual;
+
+        // Persiapkan array data untuk query
+        $data = array($jumlah, $total, $harga_jual, $id);
+
+        // Query SQL untuk update data
+        $sql = 'UPDATE nota SET jumlah=?, total=?, harga_jual=? WHERE id_nota=?';
+
+        // Persiapkan dan jalankan pernyataan SQL
+        $row = $config->prepare($sql);
+        $row->execute($data);
+
+        // Redirect ke halaman setelah update berhasil
+        echo '<script>window.location="../../index.php?page=laporan&success=edit-data"</script>';
+    }
+
     if (!empty($_GET['jual'])) {
         $id = $_POST['id'];
         $id_barang = $_POST['id_barang'];

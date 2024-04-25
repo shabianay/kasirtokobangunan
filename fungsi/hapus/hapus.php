@@ -60,13 +60,6 @@ if (!empty($_SESSION['admin'])) {
         echo '<script>window.location="../../index.php?page=jual"</script>';
     }
 
-    if (!empty(htmlentities($_GET['laporan']))) {
-        $sql = 'DELETE FROM nota';
-        $row = $config->prepare($sql);
-        $row->execute();
-        echo '<script>window.location="../../index.php?page=laporan&remove=hapus"</script>';
-    }
-
     if (!empty(htmlentities($_GET['pembeli']))) {
         $id = htmlentities($_GET['id']);
         $data[] = $id;
@@ -74,5 +67,21 @@ if (!empty($_SESSION['admin'])) {
         $row = $config->prepare($sql);
         $row->execute($data);
         echo '<script>window.location="../../index.php?page=jual&remove=hapus-data"</script>';
+    }
+
+    if (!empty(htmlentities($_GET['laporan']))) {
+        $id = htmlentities($_GET['id']);
+        $data[] = $id;
+        $sql = 'DELETE FROM nota WHERE id_nota=?';
+        $row = $config->prepare($sql);
+        $row->execute($data);
+        echo '<script>window.location="../../index.php?page=laporan&remove=hapus-data"</script>';
+    }
+
+    if (!empty(htmlentities($_GET['laporan_all']))) {
+        $sql = 'DELETE FROM nota';
+        $row = $config->prepare($sql);
+        $row->execute($data);
+        echo '<script>window.location="../../index.php?page=laporan&remove=hapus-data"</script>';
     }
 }

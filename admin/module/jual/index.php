@@ -207,6 +207,18 @@
  							<?php $no++;
 								} ?>
  							<tr>
+ 								<td>Nama Pembeli</td>
+ 								<td><input type="text" class="form-control" id="nama_pembeli" name="nama_pembeli"></td>
+ 							</tr>
+ 							<tr>
+ 								<td>Alamat Pembeli</td>
+ 								<td><input class="form-control" id="alamat_pembeli" name="alamat_pembeli" rows="3"></td>
+ 							</tr>
+ 							<tr>
+ 								<td>Telepon Pembeli</td>
+ 								<td><input type="tel" class="form-control" id="telepon_pembeli" name="telepon_pembeli"></td>
+ 							</tr>
+ 							<tr>
  								<td>Total Semua </td>
  								<td><input type="text" class="form-control" name="total" value="<?php echo $total_bayar; ?>"></td>
  								<td>Bayar </td>
@@ -217,18 +229,6 @@
  											<b>RESET</b></a>
  								</td><?php } ?></td>
  							</tr>
- 							<div class="form-group">
- 								<label for="nama_pembeli">Nama Pembeli</label>
- 								<input type="text" class="form-control" id="nama_pembeli" name="nama_pembeli" required>
- 							</div>
- 							<div class="form-group">
- 								<label for="alamat_pembeli">Alamat Pembeli</label>
- 								<input class="form-control" id="alamat_pembeli" name="alamat_pembeli" rows="3"></input>
- 							</div>
- 							<div class="form-group">
- 								<label for="telepon_pembeli">Telepon Pembeli</label>
- 								<input type="tel" class="form-control" id="telepon_pembeli" name="telepon_pembeli">
- 							</div>
  						</form>
  						<!-- aksi ke table nota -->
  						<tr>
