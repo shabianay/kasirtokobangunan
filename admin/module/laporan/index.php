@@ -223,7 +223,7 @@
  										<td><?php echo $isi['nama_barang']; ?></td>
  										<td><?php echo $isi['satuan_barang']; ?></td>
  										<td><?php echo $isi['jumlah']; ?> </td>
- 										<td>Rp.<?php echo number_format($isi['harga_beli']); ?>,-</td>
+ 										<td>Rp.<?php echo number_format($isi['harga_beli'] * $isi['jumlah']); ?>,-</td>
  										<td>Rp.<?php echo number_format($isi['total']); ?>,-</td>
  										<td><?php echo $isi['nm_member']; ?></td>
  										<td><?php echo $isi['nama_pembeli']; ?></td>
@@ -237,15 +237,18 @@
 									}
 									// Tampilkan total penjualan untuk setiap kelompok tanggal
 									?>
- 								<tr>
+
+ 								<tr class="totalterjual">
  									<th colspan="3">Total Terjual</th>
  									<th><?php echo $jumlah; ?></th>
  									<th>Rp.<?php echo number_format($modal); ?>,-</th>
  									<th>Rp.<?php echo number_format($bayar); ?>,-</th>
- 									<th colspan="3" style="background:#0bb365;color:#fff;">Keuntungan</th>
+
+ 									<th colspan="3" style="background:#0bb365;color:#fff">Keuntungan</th>
  									<th style="background:#0bb365;color:#fff;">
  										Rp.<?php echo number_format($bayar - $modal); ?>,-</th>
  								</tr>
+
  							<?php
 								}
 								?>
@@ -268,6 +271,7 @@
  	</div>
  </div>
 
+
  <script>
  	document.addEventListener("DOMContentLoaded", function() {
  		const input = document.getElementById("searchInput");
@@ -275,7 +279,20 @@
  			const filter = input.value.toUpperCase();
  			const table = document.getElementById("example1");
  			const tr = table.getElementsByTagName("tr");
+ 			const totalterjual = document.getElementsByClassName("totalterjual");
 
+ 			// Hide the totalterjual row if the search input is empty
+ 			if (!filter.trim()) {
+ 				for (let i = 0; i < totalterjual.length; i++) {
+ 					totalterjual[i].style.display = "";
+ 				}
+ 			} else {
+ 				for (let i = 0; i < totalterjual.length; i++) {
+ 					totalterjual[i].style.display = "none";
+ 				}
+ 			}
+
+ 			// Iterate over each row and show/hide based on the search input
  			for (let i = 0; i < tr.length; i++) {
  				const tdNamaBarang = tr[i].getElementsByTagName("td")[1]; // Kolom nama barang
  				const tdKasir = tr[i].getElementsByTagName("td")[6]; // Kolom kasir

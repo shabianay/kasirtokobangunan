@@ -25,6 +25,14 @@
  		<p>Hapus Data Berhasil !</p>
  	</div>
  <?php } ?>
+
+ <style>
+ 	tr.total-sum {
+ 		border-top: 2px solid #c9c9c9;
+ 		/* Adjust the thickness and color as needed */
+ 	}
+ </style>
+
  <div class="row">
  	<div class="col-sm-4">
  		<div class="card card-primary mb-3">
@@ -218,10 +226,10 @@
  								<td>Telepon Pembeli</td>
  								<td><input type="tel" class="form-control" id="telepon_pembeli" name="telepon_pembeli"></td>
  							</tr>
- 							<tr>
- 								<td>Total Semua </td>
+ 							<tr class="total-sum">
+ 								<td><b>Total Semua </b></td>
  								<td><input type="text" class="form-control" name="total" value="<?php echo $total_bayar; ?>"></td>
- 								<td>Bayar </td>
+ 								<td><b>Bayar </b></td>
  								<td><input type="text" class="form-control" name="bayar" value="<?php echo $bayar; ?>"></td>
  								<td><button class="btn btn-success"><i class="fa fa-shopping-cart"></i> Bayar</button>
  									<?php if (!empty($_GET['nota'] == 'yes')) { ?>
@@ -232,7 +240,7 @@
  						</form>
  						<!-- aksi ke table nota -->
  						<tr>
- 							<td>Kembali</td>
+ 							<td><b>Kembali</b></td>
  							<td><input type="text" class="form-control" value="<?php echo $hitung; ?>"></td>
  							<td></td>
  							<td>
